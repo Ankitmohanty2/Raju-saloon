@@ -315,64 +315,65 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
   }
 
   return (
-    <div className="animate-fade-in-up absolute bottom-5 left-1/2 z-20 w-[min(96vw,640px)] -translate-x-1/2 sm:bottom-7">
-      
+    <div className="animate-fade-in-up absolute bottom-3 left-1/2 z-20 w-[min(96vw,640px)] -translate-x-1/2 sm:bottom-7">
       <div className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
         <div id="raju-yt-player" />
       </div>
 
-      <div className="glass-pill flex items-center gap-3 rounded-full px-2.5 py-2 shadow-2xl sm:gap-4 sm:px-3 sm:py-2.5">
-        <div
-          className={`vinyl-disc relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-zinc-900 sm:h-[4.75rem] sm:w-[4.75rem] ${
-            playing && match ? "is-spinning" : "is-paused"
-          }`}
-        >
-          {art ? (
-            <img
-              key={track?.id ?? art}
-              src={art}
-              alt=""
-              draggable={false}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-white/50">
-              ♪
-            </div>
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-white sm:text-[15px]">
-            {loadingTrack ? "Finding song…" : displayTitle}
-          </p>
-          <p className="truncate text-xs text-white/60 sm:text-sm">
-            {displayArtist}
-          </p>
-
-          <div className="mt-1.5">
-            <input
-              type="range"
-              className="progress-slider"
-              min={0}
-              max={duration || 1}
-              step={0.25}
-              value={Math.min(currentTime, duration || 1)}
-              onChange={(e) => seek(Number(e.target.value))}
-              aria-label="Seek"
-              disabled={!match}
-            />
+      <div className="glass-pill flex flex-col gap-2 rounded-3xl px-3 py-2.5 shadow-2xl sm:flex-row sm:items-center sm:gap-4 sm:rounded-full sm:px-3 sm:py-2.5">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div
+            className={`vinyl-disc relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-zinc-900 sm:h-[4.75rem] sm:w-[4.75rem] ${
+              playing && match ? "is-spinning" : "is-paused"
+            }`}
+          >
+            {art ? (
+              <img
+                key={track?.id ?? art}
+                src={art}
+                alt=""
+                draggable={false}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-xs text-white/50">
+                ♪
+              </div>
+            )}
           </div>
-          <p className="mt-0.5 text-[10px] tabular-nums text-white/50 sm:text-xs">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </p>
+
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium text-white sm:text-[15px]">
+              {loadingTrack ? "Finding song…" : displayTitle}
+            </p>
+            <p className="truncate text-xs text-white/60 sm:text-sm">
+              {displayArtist}
+            </p>
+
+            <div className="mt-1.5">
+              <input
+                type="range"
+                className="progress-slider"
+                min={0}
+                max={duration || 1}
+                step={0.25}
+                value={Math.min(currentTime, duration || 1)}
+                onChange={(e) => seek(Number(e.target.value))}
+                aria-label="Seek"
+                disabled={!match}
+              />
+            </div>
+            <p className="mt-0.5 text-[10px] tabular-nums text-white/50 sm:text-xs">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </p>
+          </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="relative flex items-center justify-center gap-3 py-0.5 sm:static sm:justify-end sm:gap-2 sm:py-0">
           <button
             type="button"
             onClick={() => goTo(index - 1)}
-            className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
+            className="cursor-pointer rounded-full p-2 text-white transition hover:bg-white/10 sm:p-1.5"
             aria-label="Previous track"
           >
             <PrevIcon />
@@ -381,7 +382,7 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
             type="button"
             onClick={togglePlay}
             disabled={!match || !ready}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11"
             aria-label={playing ? "Pause" : "Play"}
           >
             {playing ? <PauseIcon /> : <PlayIcon />}
@@ -389,65 +390,67 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
           <button
             type="button"
             onClick={() => goTo(index + 1)}
-            className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
+            className="cursor-pointer rounded-full p-2 text-white transition hover:bg-white/10 sm:p-1.5"
             aria-label="Next track"
           >
             <NextIcon />
           </button>
-        </div>
 
-        <div className="hidden items-center gap-2 sm:flex">
-          <button
-            type="button"
-            onClick={() => setMuted((m) => !m)}
-            className="rounded-full p-1.5 text-white transition hover:bg-white/10"
-            aria-label={muted || volume === 0 ? "Unmute" : "Mute"}
-          >
-            {muted || volume === 0 ? <VolumeMuteIcon /> : <VolumeIcon />}
-          </button>
-          <input
-            type="range"
-            className="volume-slider w-20"
-            min={0}
-            max={1}
-            step={0.01}
-            value={muted ? 0 : volume}
-            onChange={(e) => {
-              const v = Number(e.target.value);
-              setVolume(v);
-              if (v > 0) setMuted(false);
-            }}
-            aria-label="Volume"
-          />
-        </div>
-
-        <div className="flex items-center gap-1 sm:hidden">
-          <button
-            type="button"
-            onClick={() => {
-              if (muted || volume === 0) {
+          <div className="absolute right-0 flex items-center gap-0.5 sm:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                if (muted || volume === 0) {
+                  setMuted(false);
+                  setVolume((v) => (v === 0 ? 0.7 : v));
+                } else {
+                  setVolume((v) =>
+                    Math.max(0, Math.round((v - 0.1) * 100) / 100),
+                  );
+                }
+              }}
+              className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
+              aria-label="Volume down"
+            >
+              <VolumeDownIcon />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
                 setMuted(false);
-                setVolume((v) => (v === 0 ? 0.7 : v));
-              } else {
-                setVolume((v) => Math.max(0, Math.round((v - 0.1) * 100) / 100));
-              }
-            }}
-            className="rounded-full p-1.5 text-white transition hover:bg-white/10"
-            aria-label="Volume down"
-          >
-            <VolumeDownIcon />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMuted(false);
-              setVolume((v) => Math.min(1, Math.round((v + 0.1) * 100) / 100));
-            }}
-            className="rounded-full p-1.5 text-white transition hover:bg-white/10"
-            aria-label="Volume up"
-          >
-            <VolumeUpIcon />
-          </button>
+                setVolume((v) => Math.min(1, Math.round((v + 0.1) * 100) / 100));
+              }}
+              className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
+              aria-label="Volume up"
+            >
+              <VolumeUpIcon />
+            </button>
+          </div>
+
+          <div className="ml-1 hidden items-center gap-2 border-l border-white/15 pl-3 sm:flex">
+            <button
+              type="button"
+              onClick={() => setMuted((m) => !m)}
+              className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
+              aria-label={muted || volume === 0 ? "Unmute" : "Mute"}
+            >
+              {muted || volume === 0 ? <VolumeMuteIcon /> : <VolumeIcon />}
+            </button>
+            <input
+              type="range"
+              className="volume-slider w-20"
+              min={0}
+              max={1}
+              step={0.01}
+              value={muted ? 0 : volume}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setVolume(v);
+                if (v > 0) setMuted(false);
+              }}
+              aria-label="Volume"
+            />
+          </div>
         </div>
       </div>
 

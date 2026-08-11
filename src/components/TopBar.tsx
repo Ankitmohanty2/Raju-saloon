@@ -64,48 +64,57 @@ export function TopBar({ ytMusicUrl, onlineCount }: TopBarProps) {
   }, []);
 
   return (
-    <header className="animate-fade-in-up absolute inset-x-0 top-0 z-20 px-4 py-4 sm:px-6">
-      <div className="relative flex items-start justify-between gap-3">
-        <div className="z-10 min-w-0 max-w-[42%] text-left text-white/95 drop-shadow-sm">
-          <p className="text-sm font-medium tracking-wide tabular-nums sm:text-base">
-            {clock.time || "—"}
-          </p>
-          <p className="mt-0.5 truncate text-[11px] text-white/75 sm:text-xs">
-            {clock.dateLine || "—"}
-          </p>
+    <header className="animate-fade-in-up absolute inset-x-0 top-0 z-20 px-3 py-3 sm:px-6 sm:py-4">
+      <div className="flex flex-col gap-2 sm:relative sm:block">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1 text-left text-white/95 drop-shadow-sm">
+            <p className="text-xs font-medium tracking-wide tabular-nums sm:text-base">
+              {clock.time || "—"}
+            </p>
+            <p className="mt-0.5 truncate text-[10px] text-white/75 sm:text-xs">
+              {clock.dateLine || "—"}
+            </p>
+          </div>
+
+          <div className="hidden items-center gap-2 text-sm text-white/95 drop-shadow-sm sm:absolute sm:left-1/2 sm:top-1/2 sm:flex sm:-translate-x-1/2 sm:-translate-y-1/2 sm:text-base">
+            <span
+              className="animate-soft-pulse inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+              aria-hidden
+            />
+            <span className="whitespace-nowrap">{onlineCount} online</span>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <a
+              href={SPOTIFY_PLAYLIST_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-pill flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-medium text-white transition hover:bg-white/15 sm:gap-1.5 sm:px-3 sm:text-sm"
+            >
+              <SpotifyIcon />
+              <span>Spotify</span>
+              <ExternalIcon />
+            </a>
+            <a
+              href={ytMusicUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-pill flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-medium text-white transition hover:bg-white/15 sm:gap-1.5 sm:px-3 sm:text-sm"
+            >
+              <YtMusicIcon />
+              <span className="hidden sm:inline">YT Music</span>
+              <span className="sm:hidden">YT</span>
+              <ExternalIcon />
+            </a>
+          </div>
         </div>
 
-        <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-sm text-white/95 drop-shadow-sm sm:text-base">
+        <div className="flex items-center justify-center gap-1.5 text-xs text-white/95 drop-shadow-sm sm:hidden">
           <span
-            className="animate-soft-pulse inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+            className="animate-soft-pulse inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
             aria-hidden
           />
-          <span className="pointer-events-auto whitespace-nowrap">
-            {onlineCount} online
-          </span>
-        </div>
-
-        <div className="z-10 flex shrink-0 items-center gap-2">
-          <a
-            href={SPOTIFY_PLAYLIST_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-pill flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/15 sm:text-sm"
-          >
-            <SpotifyIcon />
-            Spotify
-            <ExternalIcon />
-          </a>
-          <a
-            href={ytMusicUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-pill flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/15 sm:text-sm"
-          >
-            <YtMusicIcon />
-            YT Music
-            <ExternalIcon />
-          </a>
+          <span>{onlineCount} online</span>
         </div>
       </div>
     </header>

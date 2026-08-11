@@ -72,9 +72,9 @@ export default function Home() {
 
       <TopBar ytMusicUrl={ytMusicUrl} onlineCount={onlineCount} />
 
-      <main className="relative z-10 flex h-full items-center justify-center px-4 pb-28 pt-16">
+      <main className="relative z-10 flex h-full items-center justify-center px-4 pb-40 pt-24 sm:pb-28 sm:pt-16">
         <h1
-          className="notranslate animate-title-in text-center text-4xl font-normal leading-tight tracking-wide text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-6xl md:text-7xl lg:text-8xl"
+          className="notranslate animate-title-in text-center text-3xl font-normal leading-tight tracking-wide text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-6xl md:text-7xl lg:text-8xl"
           style={{ fontFamily: "var(--font-tiro-devanagari), serif" }}
           lang="hi"
           translate="no"
