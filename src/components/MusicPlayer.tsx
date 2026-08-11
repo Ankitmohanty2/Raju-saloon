@@ -372,7 +372,7 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
           <button
             type="button"
             onClick={() => goTo(index - 1)}
-            className="rounded-full p-1.5 text-white transition hover:bg-white/10"
+            className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
             aria-label="Previous track"
           >
             <PrevIcon />
@@ -381,7 +381,7 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
             type="button"
             onClick={togglePlay}
             disabled={!match || !ready}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11"
             aria-label={playing ? "Pause" : "Play"}
           >
             {playing ? <PauseIcon /> : <PlayIcon />}
@@ -389,7 +389,7 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
           <button
             type="button"
             onClick={() => goTo(index + 1)}
-            className="rounded-full p-1.5 text-white transition hover:bg-white/10"
+            className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
             aria-label="Next track"
           >
             <NextIcon />
