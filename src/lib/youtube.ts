@@ -1,3 +1,5 @@
+import { requireYoutubeApiKey } from "@/lib/env";
+
 export type YoutubeMatch = {
   videoId: string;
   title: string;
@@ -8,10 +10,7 @@ export type YoutubeMatch = {
 export async function searchYoutubeVideo(
   query: string,
 ): Promise<YoutubeMatch | null> {
-  const key = process.env.YOUTUBE_API_KEY;
-  if (!key) {
-    throw new Error("Missing YOUTUBE_API_KEY");
-  }
+  const key = requireYoutubeApiKey();
 
   const params = new URLSearchParams({
     part: "snippet",

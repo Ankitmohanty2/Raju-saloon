@@ -15,24 +15,27 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
 });
 
 export const metadata: Metadata = {
-  title: "Raju Bhai Ka Saloon",
+  title: process.env.NEXT_PUBLIC_SITE_NAME || "Raju Bhai Ka Saloon",
   description: "Raju Bhai Ka Saloon — a barbershop vibe room with music",
-  applicationName: "Raju Bhai Ka Saloon",
+  applicationName: process.env.NEXT_PUBLIC_SITE_NAME || "Raju Bhai Ka Saloon",
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
   icons: {
     icon: [{ url: "/images/saloon-logo.png", type: "image/png" }],
     shortcut: ["/images/saloon-logo.png"],
     apple: [{ url: "/images/saloon-logo.png" }],
   },
   openGraph: {
-    title: "Raju Bhai Ka Saloon",
+    title: process.env.NEXT_PUBLIC_SITE_NAME || "Raju Bhai Ka Saloon",
     description: "Raju Bhai Ka Saloon — a barbershop vibe room with music",
-    siteName: "Raju Bhai Ka Saloon",
+    siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Raju Bhai Ka Saloon",
     images: [{ url: "/images/saloon-logo.png" }],
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Raju Bhai Ka Saloon",
+    title: process.env.NEXT_PUBLIC_SITE_NAME || "Raju Bhai Ka Saloon",
     description: "Raju Bhai Ka Saloon — a barbershop vibe room with music",
     images: ["/images/saloon-logo.png"],
   },

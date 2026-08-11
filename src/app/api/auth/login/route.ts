@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { env } from "@/lib/env";
 import {
   challengeFromVerifier,
   generateRandomString,
@@ -7,7 +8,7 @@ import {
 } from "@/lib/spotify";
 
 export async function GET() {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientId = env.spotify.clientId();
   if (!clientId) {
     return NextResponse.json(
       { error: "SPOTIFY_CLIENT_ID is not set" },
@@ -38,14 +39,14 @@ export async function GET() {
     sameSite: "lax",
     path: "/",
     maxAge: 600,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.isProd(),
   });
   res.cookies.set("raju_spotify_state", state, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 600,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.isProd(),
   });
 
   return res;

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { env } from "@/lib/env";
 import {
   refreshAccessToken,
   type SpotifyTokens,
@@ -12,7 +13,7 @@ export async function saveTokens(tokens: SpotifyTokens): Promise<void> {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    secure: process.env.NODE_ENV === "production",
+    secure: env.isProd(),
     maxAge: 60 * 60 * 24 * 30,
   });
 }

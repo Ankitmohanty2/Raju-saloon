@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PLAYLIST_URI } from "@/lib/spotify";
+import { getPlaylistUri } from "@/lib/spotify";
 import { getValidAccessToken } from "@/lib/spotify-session";
 
 export async function PUT(req: NextRequest) {
@@ -22,7 +22,10 @@ export async function PUT(req: NextRequest) {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` },
     });
-    return NextResponse.json({ ok: res.ok || res.status === 204 }, { status: res.ok || res.status === 204 ? 200 : res.status });
+    return NextResponse.json(
+      { ok: res.ok || res.status === 204 },
+      { status: res.ok || res.status === 204 ? 200 : res.status },
+    );
   }
 
   if (body.action === "next") {
@@ -30,19 +33,30 @@ export async function PUT(req: NextRequest) {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
-    return NextResponse.json({ ok: res.ok || res.status === 204 }, { status: res.ok || res.status === 204 ? 200 : res.status });
+    return NextResponse.json(
+      { ok: res.ok || res.status === 204 },
+      { status: res.ok || res.status === 204 ? 200 : res.status },
+    );
   }
 
   if (body.action === "previous") {
-    const res = await fetch(`https://api.spotify.com/v1/me/player/previous${qs}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return NextResponse.json({ ok: res.ok || res.status === 204 }, { status: res.ok || res.status === 204 ? 200 : res.status });
+    const res = await fetch(
+      `https://api.spotify.com/v1/me/player/previous${qs}`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return NextResponse.json(
+      { ok: res.ok || res.status === 204 },
+      { status: res.ok || res.status === 204 ? 200 : res.status },
+    );
   }
 
   if (body.action === "seek" && typeof body.position_ms === "number") {
-    const seekQs = new URLSearchParams({ position_ms: String(body.position_ms) });
+    const seekQs = new URLSearchParams({
+      position_ms: String(body.position_ms),
+    });
     if (deviceId) seekQs.set("device_id", deviceId);
     const res = await fetch(
       `https://api.spotify.com/v1/me/player/seek?${seekQs.toString()}`,
@@ -51,7 +65,10 @@ export async function PUT(req: NextRequest) {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
-    return NextResponse.json({ ok: res.ok || res.status === 204 }, { status: res.ok || res.status === 204 ? 200 : res.status });
+    return NextResponse.json(
+      { ok: res.ok || res.status === 204 },
+      { status: res.ok || res.status === 204 ? 200 : res.status },
+    );
   }
 
   const res = await fetch(`https://api.spotify.com/v1/me/player/play${qs}`, {
@@ -61,7 +78,7 @@ export async function PUT(req: NextRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      context_uri: PLAYLIST_URI,
+      context_uri: getPlaylistUri(),
     }),
   });
 
@@ -70,5 +87,8 @@ export async function PUT(req: NextRequest) {
   }
 
   const text = await res.text();
-  return NextResponse.json({ error: text || "Play failed" }, { status: res.status });
+  return NextResponse.json(
+    { error: text || "Play failed" },
+    { status: res.status },
+  );
 }

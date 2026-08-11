@@ -1,18 +1,7 @@
 import { NextResponse } from "next/server";
 import { FALLBACK_TRACKS } from "@/data/playlist";
+import { env, requireSpotifyCredentials } from "@/lib/env";
 import type { PlaylistTrack } from "@/types/playlist";
-
-const PLAYLIST_ID =
-  process.env.SPOTIFY_PLAYLIST_ID ||
-  process.env.NEXT_PUBLIC_SPOTIFY_PLAYLIST_ID ||
-  "6GRco1SVVhOWKd82dviVeb";
-
-const TRACK_LIMIT = (() => {
-  const raw = Number(process.env.SPOTIFY_TRACK_LIMIT || "50");
-  return Number.isFinite(raw) && raw > 0 ? Math.min(raw, 100) : 50;
-})();
-
-const MARKET = process.env.SPOTIFY_MARKET || "ES";
 
 type TokenCache = {
   accessToken: string;
@@ -22,12 +11,7 @@ type TokenCache = {
 let tokenCache: TokenCache | null = null;
 
 async function getAccessToken(): Promise<string> {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) {
-    throw new Error("Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET");
-  }
+  const { clientId, clientSecret } = requireSpotifyCredentials();
 
   if (tokenCache && Date.now() < tokenCache.expiresAt - 60_000) {
     return tokenCache.accessToken;
@@ -80,7 +64,11 @@ type SpotifyPlaylistTracks = {
 };
 
 async function fetchTracks(accessToken: string): Promise<PlaylistTrack[]> {
-  const url = `https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks?market=${encodeURIComponent(MARKET)}&limit=${TRACK_LIMIT}&fields=items(track(id,name,preview_url,duration_ms,artists(name),album(images)))`;
+  const playlistId = env.spotify.playlistId();
+  const market = env.spotify.market();
+  const limit = env.spotify.trackLimit();
+
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?market=${encodeURIComponent(market)}&limit=${limit}&fields=items(track(id,name,preview_url,duration_ms,artists(name),album(images)))`;
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${accessToken}` },
@@ -115,10 +103,11 @@ function playlistResponse(
   tracks: PlaylistTrack[],
   source: "spotify" | "fallback",
 ) {
+  const playlistId = env.spotify.playlistId();
   return NextResponse.json({
     tracks,
-    playlistId: PLAYLIST_ID,
-    playlistUri: `spotify:playlist:${PLAYLIST_ID}`,
+    playlistId,
+    playlistUri: env.spotify.playlistUri(),
     source,
   });
 }

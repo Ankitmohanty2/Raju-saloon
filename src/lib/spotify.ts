@@ -1,11 +1,5 @@
 import { createHash, randomBytes } from "crypto";
-
-export const PLAYLIST_ID =
-  process.env.SPOTIFY_PLAYLIST_ID ||
-  process.env.NEXT_PUBLIC_SPOTIFY_PLAYLIST_ID ||
-  "6GRco1SVVhOWKd82dviVeb";
-
-export const PLAYLIST_URI = `spotify:playlist:${PLAYLIST_ID}`;
+import { env, requireSpotifyCredentials } from "@/lib/env";
 
 export const SPOTIFY_SCOPES = [
   "streaming",
@@ -15,11 +9,16 @@ export const SPOTIFY_SCOPES = [
   "user-read-playback-state",
 ].join(" ");
 
+export function getPlaylistId(): string {
+  return env.spotify.playlistId();
+}
+
+export function getPlaylistUri(): string {
+  return env.spotify.playlistUri();
+}
+
 export function getRedirectUri(): string {
-  return (
-    process.env.SPOTIFY_REDIRECT_URI ||
-    "http://127.0.0.1:3000/api/auth/callback"
-  );
+  return env.spotify.redirectUri();
 }
 
 export function generateRandomString(length = 64): string {
@@ -41,11 +40,7 @@ export async function exchangeCodeForTokens(
   code: string,
   verifier: string,
 ): Promise<SpotifyTokens> {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Missing Spotify credentials");
-  }
+  const { clientId, clientSecret } = requireSpotifyCredentials();
 
   const body = new URLSearchParams({
     grant_type: "authorization_code",
@@ -88,11 +83,7 @@ export async function exchangeCodeForTokens(
 export async function refreshAccessToken(
   refreshToken: string,
 ): Promise<SpotifyTokens> {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Missing Spotify credentials");
-  }
+  const { clientId, clientSecret } = requireSpotifyCredentials();
 
   const body = new URLSearchParams({
     grant_type: "refresh_token",

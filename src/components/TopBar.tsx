@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const SPOTIFY_PLAYLIST_URL =
   process.env.NEXT_PUBLIC_SPOTIFY_PLAYLIST_URL ||
-  "https://open.spotify.com/playlist/6GRco1SVVhOWKd82dviVeb";
+  `https://open.spotify.com/playlist/${process.env.NEXT_PUBLIC_SPOTIFY_PLAYLIST_ID || "6GRco1SVVhOWKd82dviVeb"}`;
 
 const DAYS = [
   "Sunday",
