@@ -1,30 +1,21 @@
 # राजू भाई का सैलून
 
+A barbershop vibe page with music — play Bollywood tracks one by one with volume control.
+
 ## Setup
 
-1. `npm install`
-2. `copy .env.example .env.local`
-3. Fill in keys in `.env.local`
-4. `npm run dev`
+```bash
+npm install
+copy .env.example .env.local
+```
 
-## Environment
+Add your keys in `.env.local`, then:
 
-All config lives in `.env.local` (see `.env.example`).
+```bash
+npm run dev
+```
 
-| Variable | Required | Purpose |
-|---|---|---|
-| `SPOTIFY_CLIENT_ID` | for live Spotify sync | Spotify app client id |
-| `SPOTIFY_CLIENT_SECRET` | for live Spotify sync | Spotify app secret |
-| `SPOTIFY_PLAYLIST_ID` | no | playlist id (default set) |
-| `SPOTIFY_MARKET` | no | market code (`IN`) |
-| `SPOTIFY_TRACK_LIMIT` | no | tracks to fetch (max 100) |
-| `YOUTUBE_API_KEY` | yes for audio | YouTube Data API key |
-| `NEXT_PUBLIC_SPOTIFY_PLAYLIST_URL` | no | Spotify button link |
-| `NEXT_PUBLIC_YT_MUSIC_URL` | no | YT Music button link |
-| `NEXT_PUBLIC_SITE_NAME` | no | site title |
-| `NEXT_PUBLIC_SITE_URL` | no | site url |
-
-Server code reads env through `src/lib/env.ts`.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ## License
 
