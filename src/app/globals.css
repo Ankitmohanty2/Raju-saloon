@@ -156,6 +156,22 @@ input[type="range"].volume-slider::-moz-range-thumb {
   cursor: pointer;
 }
 
+@media (max-width: 639px) {
+  input[type="range"].volume-slider {
+    height: 6px;
+  }
+
+  input[type="range"].volume-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  input[type="range"].volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+}
+
 input[type="range"].progress-slider {
   -webkit-appearance: none;
   appearance: none;

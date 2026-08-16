@@ -207,6 +207,40 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
     }
   }, [volume, muted, ready]);
 
+  const applyVolume = (next: number) => {
+    const clamped = Math.min(1, Math.max(0, next));
+    setVolume(clamped);
+    if (clamped > 0) setMuted(false);
+    const player = playerRef.current;
+    if (!player || !ready) return;
+    try {
+      player.unMute();
+      player.setVolume(Math.round(clamped * 100));
+    } catch {
+      /* player may not be ready */
+    }
+  };
+
+  const toggleMute = () => {
+    const player = playerRef.current;
+    setMuted((wasMuted) => {
+      const nextMuted = !wasMuted;
+      if (player && ready) {
+        try {
+          if (nextMuted) player.mute();
+          else {
+            player.unMute();
+            player.setVolume(Math.round((volume || 0.7) * 100));
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      return nextMuted;
+    });
+    if (volume === 0) applyVolume(0.7);
+  };
+
   useEffect(() => {
     if (!playing) return;
     const id = window.setInterval(() => {
@@ -396,41 +430,19 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
             <NextIcon />
           </button>
 
-          <div className="absolute right-0 flex items-center gap-0.5 sm:hidden">
-            <button
-              type="button"
-              onClick={() => {
-                if (muted || volume === 0) {
-                  setMuted(false);
-                  setVolume((v) => (v === 0 ? 0.7 : v));
-                } else {
-                  setVolume((v) =>
-                    Math.max(0, Math.round((v - 0.1) * 100) / 100),
-                  );
-                }
-              }}
-              className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
-              aria-label="Volume down"
-            >
-              <VolumeDownIcon />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMuted(false);
-                setVolume((v) => Math.min(1, Math.round((v + 0.1) * 100) / 100));
-              }}
-              className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
-              aria-label="Volume up"
-            >
-              <VolumeUpIcon />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={toggleMute}
+            className="absolute right-0 cursor-pointer rounded-full p-2 text-white transition hover:bg-white/10 sm:hidden"
+            aria-label={muted || volume === 0 ? "Unmute" : "Mute"}
+          >
+            {muted || volume === 0 ? <VolumeMuteIcon /> : <VolumeIcon />}
+          </button>
 
           <div className="ml-1 hidden items-center gap-2 border-l border-white/15 pl-3 sm:flex">
             <button
               type="button"
-              onClick={() => setMuted((m) => !m)}
+              onClick={toggleMute}
               className="cursor-pointer rounded-full p-1.5 text-white transition hover:bg-white/10"
               aria-label={muted || volume === 0 ? "Unmute" : "Mute"}
             >
@@ -443,11 +455,10 @@ export function MusicPlayer({ tracks }: MusicPlayerProps) {
               max={1}
               step={0.01}
               value={muted ? 0 : volume}
-              onChange={(e) => {
-                const v = Number(e.target.value);
-                setVolume(v);
-                if (v > 0) setMuted(false);
-              }}
+              onChange={(e) => applyVolume(Number(e.target.value))}
+              onInput={(e) =>
+                applyVolume(Number((e.target as HTMLInputElement).value))
+              }
               aria-label="Volume"
             />
           </div>
@@ -507,22 +518,6 @@ function VolumeMuteIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v4h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z" />
-    </svg>
-  );
-}
-
-function VolumeDownIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z" />
-    </svg>
-  );
-}
-
-function VolumeUpIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
     </svg>
   );
 }
